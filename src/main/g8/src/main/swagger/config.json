@@ -1,0 +1,4 @@
+{
+  "modelPackage": "$package$.$name;format="camel"$.model.generated",
+  "apiPackage": "$package$.$name;format="camel"$.api"
+}

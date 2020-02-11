@@ -1,0 +1,113 @@
+plugins {
+  id "idea"
+  id "scala"
+  id "org.gradle.playframework" version "0.9"
+  id "org.hidetake.swagger.generator" version "2.18.1"
+  id "com.github.maiflai.scalatest" version "0.25"
+  id "org.scoverage" version "4.0.0"
+}
+
+group = "$package$"
+version = "0.0.1-SNAPSHOT"
+
+play {
+  platform {
+    scalaVersion = "\$scalaMajorVersion"
+    playVersion = "\$playFullVersion"
+    javaVersion = JavaVersion.VERSION_1_8
+  }
+  injectedRoutesGenerator = true
+}
+
+sourceSets {
+  main {
+    scala {
+      srcDirs += ["src/main/scala", "\$buildDir/swagger-code-swaggerApi/src/main/scala"]
+    }
+    resources {
+      srcDirs += ["src/main/resources", "\$buildDir/swagger-ui-swaggerApi"]
+    }
+    routes {
+      srcDirs += "src/main/routes"
+    }
+    javaScript {
+      exclude "**/old_*.js"
+    }
+  }
+  test {
+    scala {
+      srcDirs += "src/test/scala"
+    }
+    resources {
+      srcDirs += "src/test/resources"
+    }
+  }
+}
+
+dependencies {
+  implementation "javax.annotation:javax.annotation-api:\$javaxAnnotationVersion"
+  implementation "org.scala-lang:scala-library:\$scalaFullVersion"
+  implementation "com.typesafe.play:play_\$scalaMajorVersion:\$playFullVersion"
+  implementation "com.typesafe.play:play-guice_\$scalaMajorVersion:\$playFullVersion"
+  implementation "com.typesafe.play:play-logback_\$scalaMajorVersion:\$playFullVersion"
+  implementation "com.typesafe.scala-logging:scala-logging_\$scalaMajorVersion:\$scalaLoggingVersion"
+  swaggerCodegen "io.swagger.codegen.v3:swagger-codegen-cli:\$swaggerCodegenVersion"
+
+  $if(use_swagger_ui.truthy)$
+  swaggerUI "org.webjars:swagger-ui:\$swaggerUIVersion"
+  $endif$
+
+  implementation "org.liquibase:liquibase-core:\$liquibaseVersion"
+  implementation "com.typesafe.slick:slick_\$scalaMajorVersion:\$scalaSlickVersion"
+  implementation "com.typesafe.slick:slick-hikaricp_\$scalaMajorVersion:\$scalaSlickVersion"
+  implementation "com.h2database:h2:\$h2Version"
+  $if(use_mysql.truthy)$
+  implementation "mysql:mysql-connector-java:\$mysqlConnectorVersion"
+  $endif$
+
+  testImplementation "com.h2database:h2:\$h2Version"
+  testImplementation "org.pegdown:pegdown:\$pegdownVersion"
+  testImplementation "junit:junit:\$junitVersion"
+  testImplementation "org.mockito:mockito-core:\$mockitoVersion"
+  testImplementation "org.scalatest:scalatest_\$scalaMajorVersion:\$scalaTestVersion"
+  testImplementation "org.scalatestplus.play:scalatestplus-play_\$scalaMajorVersion:\$scalaTestPlusVersion"
+
+  testRuntimeOnly "org.scala-lang.modules:scala-xml_\$scalaMajorVersion:\$scalaXmlVersion"
+}
+
+scoverage {
+  excludedPackages = ["router\\\\.*"]
+  excludedFiles = [".*Module", ".*(JavaScript)?ReverseRoutes", "routes"]
+  minimumRate = 0.9
+}
+
+repositories {
+  mavenCentral()
+  maven {
+    name "lightbend-maven-release"
+    url "https://repo.lightbend.com/lightbend/maven-releases"
+  }
+  jcenter()
+  ivy {
+    name "lightbend-ivy-release"
+    url "https://repo.lightbend.com/lightbend/ivy-releases"
+    layout "ivy"
+  }
+}
+
+swaggerSources {
+  swaggerApi {
+    inputFile = file("src/main/swagger/swagger-api.json")
+    code {
+      language = "scala"
+      components = ["models"]
+      configFile = file("src/main/swagger/config.json")
+    }
+  }
+}
+
+build.dependsOn checkScoverage
+
+generateSwaggerCode.dependsOn generateSwaggerUI
+compilePlayRoutes.dependsOn generateSwaggerCode
+compileScala.dependsOn compilePlayRoutes

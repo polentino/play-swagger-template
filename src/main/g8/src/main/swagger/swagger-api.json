@@ -1,0 +1,64 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Simple name counter API",
+    "version": "0.0.1-SNAPSHOT"
+  },
+  "paths": {
+    "/": {
+      "get": {
+        "tags": [
+          "Name Counter"
+        ],
+        "operationId": "count",
+        "summary": "count and return instances of `name`",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "name",
+            "description": "the `name` we want to count",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200 response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NameResponse"
+                }
+              },
+              "application/text": {
+                "example": "Hello, Anonymous"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "NameResponse": {
+        "required": [
+          "name",
+          "frequency"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "the value of the `name` parameter that was just sent to the app"
+          },
+          "frequency": {
+            "type": "integer",
+            "description": "number of times the app received this particular `name` parameter"
+          }
+        }
+      }
+    }
+  }
+}

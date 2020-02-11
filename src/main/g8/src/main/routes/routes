@@ -1,0 +1,7 @@
+GET        /             $package$.$name;format="camel"$.controllers.NameController.count(name: Option[String])
+
+$if(use_swagger_ui.truthy) $
+# Swagger UI
+GET        /api          controllers.Assets.at(path = "/", file = "index.html")
+GET        /*file        controllers.Assets.at(path = "/", file)
+$endif$
