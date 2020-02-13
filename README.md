@@ -1,8 +1,8 @@
 Play Gradle g8 Template
 =========================
-[![shields.io](https://img.shields.io/badge/CONTRIBUTORS-WELCOME&lt;3-blueviolet?logo=scala)](https://creativecommons.org/publicdomain/zero/1.0/)
+[![shields.io](https://img.shields.io/badge/CONTRIBUTORS-WELCOME&lt;3-blueviolet)](https://creativecommons.org/publicdomain/zero/1.0/)
 [![shields.io](http://img.shields.io/badge/LICENSE-CC0-blue.svg)](https://creativecommons.org/publicdomain/zero/1.0/)
-[![@polentino911](https://img.shields.io/badge/VERSION-0.0.1-brightgreen.svg)](https://twitter.com/polentino911)
+[![@polentino911](https://img.shields.io/badge/VERSION-0.0.2-brightgreen.svg?logo=scala)](https://twitter.com/polentino911)
 
 ## Introduction
 A sample template project for a [Play!](https://www.playframework.com/) application written
