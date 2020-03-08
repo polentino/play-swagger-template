@@ -9,12 +9,12 @@ Play Gradle g8 Template
 
 ## Table of contents
 
- - [Introduction](#Introduction)
- - [Application description](#Application description)
- - [Features](#Features)
- - [How to use the template](#How to use the template)
- - [Run the application](#Run the application)
- - [Notes](#Notes)
+ - [Introduction](#introduction)
+ - [Application description](#application-description)
+ - [Features](#features)
+ - [How to use the template](how-to-use-the-template)
+ - [Run the application](#run-the-application)
+ - [Notes](#notes)
 
 
 ## Introduction
