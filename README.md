@@ -12,7 +12,7 @@ Play Gradle g8 Template
  - [Introduction](#introduction)
  - [Application description](#application-description)
  - [Features](#features)
- - [How to use the template](how-to-use-the-template)
+ - [How to use the template](#how-to-use-the-template)
  - [Run the application](#run-the-application)
  - [Notes](#notes)
 
@@ -50,7 +50,7 @@ The default RDBMS is H2 or, if you choose so at configuration time, MySQL. Other
    - [x] backend client api generation (typescript)
  - [x] [Swagger UI](https://github.com/swagger-api/swagger-ui) for convenient access to the API of
    the microservice
- - [x] [Angular](https://angular.io/) 8.2.3 frontend
+ - [x] [Angular](https://angular.io/) frontend
 
 (*) Play `2.6` is the latest version supported by `org.gradle.playframework` plugin; there is however some
 [activity recently](https://github.com/gradle/playframework/commit/ee20b323b1a79f85f8261621272e4743e6476968) 
