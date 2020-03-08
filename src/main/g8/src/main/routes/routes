@@ -1,7 +1,14 @@
-GET        /             $package$.$name;format="camel"$.controllers.NameController.count(name: Option[String])
+# Backend API
+GET        /count            $package$.$name;format="camel"$.controllers.NameController.count(name: Option[String])
 
 $if(use_swagger_ui.truthy) $
 # Swagger UI
-GET        /api          controllers.Assets.at(path = "/", file = "index.html")
-GET        /*file        controllers.Assets.at(path = "/", file)
+GET        /api              controllers.Assets.at(path = "/api", file = "index.html")
+GET        /api/:file        controllers.Assets.at(path = "/api", file)
+$endif$
+
+$if(use_angular_frontend.truthy)$
+# Main App
+GET        /                 controllers.Assets.at(path = "/ui", file = "index.html")
+GET        /*file            controllers.Assets.at(path = "/ui", file)
 $endif$

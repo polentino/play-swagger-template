@@ -13,13 +13,19 @@ class NameRouterSpec
 
   import $package$.$name;format="camel"$.conversions.ModelConversions._
 
-  behavior of "GET /"
+  behavior of "GET /count"
   it should "return 'Hello, Anonymous' when no query parameters is provided" in {
-    val Some(result) = route(app, FakeRequest())
+    val Some(result) = route(app, FakeRequest("GET", "/count"))
     contentAsString(result) shouldBe "Hello, Anonymous"
   }
 
-  behavior of "GET /?name=TurangaLeela (3 times)"
+  behavior of "GET /count?name="
+  it should "return 'Hello, Anonymous'" in {
+    val Some(result) = route(app, FakeRequest("GET", "/count?name="))
+    contentAsString(result) shouldBe "Hello, Anonymous"
+  }
+
+  behavior of "GET /count?name=TurangaLeela (3 times)"
   it should "increase the counter for 'TurangaLeela' up to 3" in {
     callAndTest(1)
     callAndTest(2)
@@ -27,7 +33,7 @@ class NameRouterSpec
   }
 
   private def callAndTest(times: Int): Assertion = {
-    val Some(result3) = route(app, FakeRequest("GET", "/?name=TurangaLeela"))
+    val Some(result3) = route(app, FakeRequest("GET", "/count?name=TurangaLeela"))
     contentAsJson(result3) shouldBe Json.toJson(NameResponse("TurangaLeela", times))
   }
 }

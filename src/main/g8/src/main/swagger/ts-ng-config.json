@@ -1,0 +1,6 @@
+{
+  "npmName": "@$name;format="lower,snake"$/backend_client_api",
+  "npmVersion": "0.0.1",
+  "ngVersion": "8.2.3",
+  "providedInRoot": false
+}

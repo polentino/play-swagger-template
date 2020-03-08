@@ -5,10 +5,13 @@ plugins {
   id "org.hidetake.swagger.generator" version "2.18.1"
   id "com.github.maiflai.scalatest" version "0.25"
   id "org.scoverage" version "4.0.0"
+  $if(use_angular_frontend.truthy)$
+  id "com.github.node-gradle.node" version "2.2.1"
+  $endif$
 }
 
 group = "$package$"
-version = "0.0.1-SNAPSHOT"
+version = "$version$"
 
 play {
   platform {
@@ -22,10 +25,10 @@ play {
 sourceSets {
   main {
     scala {
-      srcDirs += ["src/main/scala", "\$buildDir/swagger-code-swaggerApi/src/main/scala"]
+      srcDirs += ["src/main/scala", "\$buildDir/generated-model-scala/src/main/scala"]
     }
     resources {
-      srcDirs += ["src/main/resources", "\$buildDir/swagger-ui-swaggerApi"]
+      srcDirs += ["src/main/resources"$if(use_swagger_ui.truthy)$, "\$buildDir/swagger-ui"$endif$$if(use_angular_frontend.truthy)$, "\$rootDir/ui/dist"$endif$]
     }
     routes {
       srcDirs += "src/main/routes"
@@ -96,18 +99,104 @@ repositories {
 }
 
 swaggerSources {
-  swaggerApi {
+  swaggerModel {
     inputFile = file("src/main/swagger/swagger-api.json")
     code {
+      outputDir = file("\$buildDir/generated-model-scala")
       language = "scala"
       components = ["models"]
       configFile = file("src/main/swagger/config.json")
     }
   }
+  $if(use_angular_frontend.truthy)$
+  swaggerApi {
+    inputFile = file("src/main/swagger/swagger-api.json")
+    code {
+      outputDir = file("\$buildDir/generated-backend-client-api-ts-ng")
+      language = "typescript-angular"
+      components = ["apis, models"]
+      configFile = file("src/main/swagger/ts-ng-config.json")
+    }
+  }
+  $endif$
 }
 
-build.dependsOn checkScoverage
+$if(use_swagger_ui.truthy)$
+// copy index.html with customized js path
+generateSwaggerUI {
+  inputFile = file("src/main/swagger/swagger-api.json")
+  outputDir = file("\$buildDir/swagger-ui/api")
+  wipeOutputDir = false
+  doLast {
+    copy {
+      from 'src/main/resources/index.html'
+      into outputDir
+    }
+  }
+}
+$endif$
+
+$if(use_angular_frontend.truthy)$
+node {
+  version = '12.4.0'
+  download = true
+}
+
+// how the frontend app stub was build
+//task task_00_generateFrontendStub(type: NpxTask) {
+//  command = '@angular/cli@8.3.25'
+//  args = ['new', 'ui']
+//}
+
+task task_01_installBackendClientApiDependencies(type: NpxTask) {
+  workingDir = file("\$buildDir/generated-backend-client-api-ts-ng")
+  command = 'npm'
+  args = ['install']
+}
+
+task task_02_buildBackendClientApi(type: NpxTask) {
+  workingDir = file("\$buildDir/generated-backend-client-api-ts-ng")
+  command = 'npm'
+  args = ['run', 'build']
+}
+
+task task_03_installBackendClientApi(type: NpxTask) {
+  workingDir = file("\$rootDir/ui")
+  command = 'npm'
+  args = ['install' ,"\$buildDir/generated-backend-client-api-ts-ng/dist", '--save']
+}
+
+task task_04_installFrontendDependencies(type: NpxTask) {
+  workingDir = file("\$rootDir/ui")
+  command = 'npm'
+  args = ['install']
+}
+
+task task_05_buildFrontend(type: NpxTask) {
+  workingDir = file("\$rootDir/ui")
+  command = 'npm'
+  args = ['run-script', 'build' ,"--prod"]
+}
+
+// these task_0X_ have to be executed at least once to ensure the correct dependencies/binaries
+// for your os/arch are pulled & installed; after that, you can disable all those chain of
+// task dependencies, and run each of them individually if/when needed
+task_01_installBackendClientApiDependencies.dependsOn generateSwaggerCodeSwaggerApi
+task_02_buildBackendClientApi.dependsOn task_01_installBackendClientApiDependencies
+task_03_installBackendClientApi.dependsOn task_02_buildBackendClientApi
+task_04_installFrontendDependencies.dependsOn task_03_installBackendClientApi
+task_05_buildFrontend.dependsOn task_04_installFrontendDependencies
+generateSwaggerUI.dependsOn task_05_buildFrontend
+$endif$
 
 generateSwaggerCode.dependsOn generateSwaggerUI
 compilePlayRoutes.dependsOn generateSwaggerCode
 compileScala.dependsOn compilePlayRoutes
+$if(use_angular_frontend.truthy)$
+
+clean.doFirst {
+  delete "\$rootDir/ui/dist"
+}
+
+$endif$
+build.dependsOn checkScoverage

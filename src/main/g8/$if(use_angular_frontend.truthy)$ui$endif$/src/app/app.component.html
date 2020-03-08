@@ -1,0 +1,18 @@
+<div class="centered-form-field">
+  <mat-card>
+    <mat-card-title>
+      Submit & count name
+    </mat-card-title>
+    <mat-card-content>
+      <mat-form-field>
+        <input id="countInput" matInput placeholder="Insert name here" (keyup.enter)="submit()">
+      </mat-form-field>
+    </mat-card-content>
+    <div id="result"></div>
+    <mat-card-actions>
+      <div>
+        <button class="send-button" mat-raised-button color="primary" (click)="submit()">Submit & Count</button>
+      </div>
+    </mat-card-actions>
+  </mat-card>
+</div>

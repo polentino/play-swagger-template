@@ -3,7 +3,7 @@ info:
   title: Simple name counter API
   version: 0.0.1-SNAPSHOT
 paths:
-  /:
+  /count:
     get:
       tags:
         - Name Counter

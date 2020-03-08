@@ -2,6 +2,7 @@ package $package$.$name;format="camel"$.controllers
 
 import com.typesafe.scalalogging.LazyLogging
 import javax.inject.{Inject, Singleton}
+import org.apache.commons.lang3.StringUtils
 import $package$.$name;format="camel"$.model.generated.NameResponse
 import $package$.$name;format="camel"$.persistence.Name
 import $package$.$name;format="camel"$.repositories.NameRepository
@@ -28,7 +29,7 @@ class NameController @Inject()(
 
   def count(name: Option[String] = None): Action[AnyContent] = Action.async {
     name match {
-      case Some(realName) =>
+      case Some(realName) if !StringUtils.isBlank(realName) =>
         nameRepository.findByName(realName) flatMap {
           case Some(user) => nameRepository.update(user.copy(frequency = user.frequency + 1))
           case _ => nameRepository.create(Name(None, realName, 1))
