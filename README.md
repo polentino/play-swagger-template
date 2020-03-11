@@ -19,7 +19,7 @@ Play Gradle g8 Template
 
 ## Introduction
 A [g8](https://github.com/foundweekends/giter8.g8) template project for a [Play!](https://www.playframework.com/) application written
-in [Scala](https://www.scala-lang.org/), using [Gradle](https://gradle.org/) build tool, and an optina [Angular](https://angular.io/)
+in [Scala](https://www.scala-lang.org/), using [Gradle](https://gradle.org/) build tool, and an optional [Angular](https://angular.io/)
 frontend.
 
 It provides a basic, yet fully working application/microservice with persistence, db versioning,
