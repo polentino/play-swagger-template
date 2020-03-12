@@ -28,12 +28,15 @@ generated client models, code coverage, swagger/openapi integration etc.. depend
 
 
 ## Application description
-Regardless of the configuration setup chosen by the user, this template will create a Play application that listens to `GET` requests
+Regardless of the configuration setup chosen by the user this template will, at the very least, create a Play application that listens to `GET` requests
 with query parameter`?name=<something>`, and returns how many times `something` was invoked. The number of invocations for each
 instance of `name` values are persisted, such that the total frequency of occurrences is preserved across application restarts.
 
 The default RDBMS is H2 or, if you choose so at configuration time, MySQL. Other databases can be added as well by changing
 `application.conf` and adding the corresponding connector library in `build.gradle` : no code changes required at all :tada:
+
+You can also choose whether to expose a swagger-ui interface and/or build an Angular frontend to invoke the app endpoint,
+all conveniently packaged in the same project.
 
 
 ## Features
