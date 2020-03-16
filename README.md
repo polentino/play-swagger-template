@@ -19,7 +19,7 @@ Play Gradle g8 Template
 
 ## Introduction
 A [g8](https://github.com/foundweekends/giter8.g8) template project for a [Play!](https://www.playframework.com/) application written
-in [Scala](https://www.scala-lang.org/), using [Gradle](https://gradle.org/) build tool, and an optina [Angular](https://angular.io/)
+in [Scala](https://www.scala-lang.org/), using [Gradle](https://gradle.org/) build tool, and an optional [Angular](https://angular.io/)
 frontend.
 
 It provides a basic, yet fully working application/microservice with persistence, db versioning,
@@ -28,12 +28,15 @@ generated client models, code coverage, swagger/openapi integration etc.. depend
 
 
 ## Application description
-Regardless of the configuration setup chosen by the user, this template will create a Play application that listens to `GET` requests
+Regardless of the configuration setup chosen by the user this template will, at the very least, create a Play application that listens to `GET` requests
 with query parameter`?name=<something>`, and returns how many times `something` was invoked. The number of invocations for each
 instance of `name` values are persisted, such that the total frequency of occurrences is preserved across application restarts.
 
 The default RDBMS is H2 or, if you choose so at configuration time, MySQL. Other databases can be added as well by changing
 `application.conf` and adding the corresponding connector library in `build.gradle` : no code changes required at all :tada:
+
+You can also choose whether to expose a swagger-ui interface and/or build an Angular frontend to invoke the app endpoint,
+all conveniently packaged in the same project.
 
 
 ## Features
