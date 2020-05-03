@@ -21,6 +21,7 @@ class NameRouterSpec
 
   behavior of "GET /count?name="
   it should "return 'Hello, Anonymous'" in {
+    Thread.sleep(1000)
     val Some(result) = route(app, FakeRequest("GET", "/count?name="))
     contentAsString(result) shouldBe "Hello, Anonymous"
   }
@@ -32,7 +33,13 @@ class NameRouterSpec
     callAndTest(3)
   }
 
+  it should "return a 429 - TooManyRequests" in {
+    val Some(result) = route(app, FakeRequest("GET", "/count?name=TurangaLeela"))
+    status(result) shouldBe TOO_MANY_REQUESTS
+  }
+
   private def callAndTest(times: Int): Assertion = {
+    Thread.sleep(1000)
     val Some(result3) = route(app, FakeRequest("GET", "/count?name=TurangaLeela"))
     contentAsJson(result3) shouldBe Json.toJson(NameResponse("TurangaLeela", times))
   }

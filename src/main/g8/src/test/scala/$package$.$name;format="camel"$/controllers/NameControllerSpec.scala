@@ -45,12 +45,24 @@ class NameControllerSpec
     callAndTest(Some(benderRodriguez), 3)
   }
 
+  it should "return a 429 - TooManyRequests" in new Fixture {
+    when(nameRepository.findByName(benderRodriguez))
+      .thenReturn(Future.successful(None))
+
+    when(nameRepository.create(Name(None, benderRodriguez, 1)))
+      .thenReturn(Future.successful(Name(Some(1), benderRodriguez, 1)))
+
+    status(controller.count(Some(benderRodriguez))(FakeRequest())) shouldBe OK
+    status(controller.count(Some(benderRodriguez))(FakeRequest())) shouldBe TOO_MANY_REQUESTS
+  }
+
   trait Fixture {
     val benderRodriguez = "BenderRodriguez"
     val nameRepository: NameRepository = mock[NameRepository]
     val controller: NameController = new NameController(nameRepository, stubControllerComponents())
 
     def callAndTest(name: Option[String], times: Int = 0): Assertion = {
+      Thread.sleep(1000)
       name match {
         case None =>
           contentAsString(controller.count()(FakeRequest())) shouldBe "Hello, Anonymous"

@@ -3,6 +3,7 @@ package $package$.$name;format="camel"$.controllers
 import com.typesafe.scalalogging.LazyLogging
 import javax.inject.{Inject, Singleton}
 import org.apache.commons.lang3.StringUtils
+import $package$.$name;format="camel"$.filters.RateLimiterFilter
 import $package$.$name;format="camel"$.model.generated.NameResponse
 import $package$.$name;format="camel"$.persistence.Name
 import $package$.$name;format="camel"$.repositories.NameRepository
@@ -27,7 +28,10 @@ class NameController @Inject()(
 
   import $package$.$name;format="camel"$.conversions.ModelConversions._
 
-  def count(name: Option[String] = None): Action[AnyContent] = Action.async {
+  private val rateLimiterFilter = new RateLimiterFilter(1)
+
+  def count(name: Option[String] = None): Action[AnyContent] =
+    Action.andThen(rateLimiterFilter).async {
     name match {
       case Some(realName) if !StringUtils.isBlank(realName) =>
         nameRepository.findByName(realName) flatMap {
